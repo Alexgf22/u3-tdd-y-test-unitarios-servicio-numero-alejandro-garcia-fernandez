@@ -9,7 +9,7 @@ class ServicioNumerosTest : DescribeSpec({
         val randomNumbers = ServicioNumeros(1, 10)
 
         it("Devolverá un número aleatorio entre min y max") {
-            randomNumbers.dameNumero().should { 1..10 }
+            randomNumbers.dameUnNumero().should { 1..10 }
         }
     }
 
