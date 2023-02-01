@@ -17,17 +17,32 @@ class ServicioNumeros(minimo: Int, maximo: Int) {
     var numeroAleatorio = rangoNumeros.random()
 
     fun dameUnNumero(): Int {
-        var numeroResultante = 0
-        if(!comprobarCantidadNumeros(numeroAleatorio)) {
-            numeroResultante += numeroAleatorio
+        if(!comprobarCantidadNumeros(numeroAleatorio) && numeroAleatorio !in numeros) {
+            numeros.add(numeroAleatorio)
         }
-        return numeroResultante
+        else if(!comprobarCantidadNumeros(numeroAleatorio) && numeroAleatorio in numeros) {
+            numeroAleatorio = rangoNumeros.random()
+        }
+        return numeroAleatorio
     }
 
     fun dameNumerosRestantes(): MutableList<Int> {
         val numerosRestantes: MutableList<Int> = mutableListOf()
-        for(i in rangoNumeros) {
-            if(!comprobarCantidadNumeros(numeroAleatorio) && (numeroAleatorio !in numerosRestantes)) {
+
+        for(i in numeros.size.. limiteLista) {
+            numeroAleatorio = rangoNumeros.random()
+
+            if(!comprobarCantidadNumeros(numeroAleatorio) && (numeroAleatorio !in numerosRestantes) && (numeroAleatorio !in numeros)) {
+                numerosRestantes.add(numeroAleatorio)
+            }
+
+            else if(numeroAleatorio in numerosRestantes) {
+                while((numeroAleatorio in numerosRestantes) && (!comprobarCantidadNumeros(numeroAleatorio))) {
+                    numeroAleatorio = rangoNumeros.random()
+                }
+                /* Cuando comprueba en el bucle que númeroAleatorio no esté en númerosRestantes y no esté
+                   en números pedidos, lo añade a la lista de numerosRestantes.
+                 */
                 numerosRestantes.add(numeroAleatorio)
             }
         }
@@ -39,12 +54,10 @@ class ServicioNumeros(minimo: Int, maximo: Int) {
 
     fun comprobarCantidadNumeros(numeroAleatorio: Int): Boolean {
         var excedidoLimite = false
-        if((numeroAleatorio !in numeros) && (numeros.size < limiteLista)) {
-            numeros.add(numeroAleatorio)
-        }
-        else {
+        if(numeros.size > limiteLista) {
             excedidoLimite = true
         }
+
         return excedidoLimite
 
     }
@@ -56,9 +69,11 @@ fun main() {
     val servicioNum1 = ServicioNumeros(1,10)
 
     val numeroAleatorio = servicioNum1.dameUnNumero()
+    val numeroAleatorio2 = servicioNum1.dameUnNumero()
 
     val numerosRestantes = servicioNum1.dameNumerosRestantes()
 
     println(numeroAleatorio)
+    println(numeroAleatorio2)
     println(numerosRestantes)
 }
