@@ -11,56 +11,51 @@ package es.edu.iesra.daw.agf.api
       como si se solicitara el resto de números.
  */
 class ServicioNumeros(minimo: Int, maximo: Int) {
-    var numeros: MutableList<Int> = mutableListOf()
-    val rangoNumeros = minimo until maximo
-    val limiteLista = maximo - minimo
-    var numeroAleatorio = rangoNumeros.random()
 
-    fun dameUnNumero(): Int {
-        if(!comprobarCantidadNumeros(numeroAleatorio) && numeroAleatorio !in numeros) {
-            numeros.add(numeroAleatorio)
+    private lateinit var fuenteNumeros: MutableList<Int>
+    private val listaNumeros: List<Int> by lazy {
+        List(maximo - minimo) {
+            minimo + it
         }
-        else if(!comprobarCantidadNumeros(numeroAleatorio) && numeroAleatorio in numeros) {
-            numeroAleatorio = rangoNumeros.random()
-        }
-        return numeroAleatorio
     }
 
-    fun dameNumerosRestantes(): MutableList<Int> {
-        val numerosRestantes: MutableList<Int> = mutableListOf()
-
-        for(i in numeros.size.. limiteLista) {
-            numeroAleatorio = rangoNumeros.random()
-
-            if(!comprobarCantidadNumeros(numeroAleatorio) && (numeroAleatorio !in numerosRestantes) && (numeroAleatorio !in numeros)) {
-                numerosRestantes.add(numeroAleatorio)
-            }
-
-            else if(numeroAleatorio in numerosRestantes) {
-                while((numeroAleatorio in numerosRestantes) && (!comprobarCantidadNumeros(numeroAleatorio))) {
-                    numeroAleatorio = rangoNumeros.random()
-                }
-                /* Cuando comprueba en el bucle que númeroAleatorio no esté en númerosRestantes y no esté
-                   en números pedidos, lo añade a la lista de numerosRestantes.
-                 */
-                numerosRestantes.add(numeroAleatorio)
-            }
-        }
-        return numerosRestantes
+    init {
+        require(maximo > minimo) {"El parámetro máximo tiene que ser mayor que el mínimo"}
+        inicializa()
     }
 
 
-
-
-    fun comprobarCantidadNumeros(numeroAleatorio: Int): Boolean {
-        var excedidoLimite = false
-        if(numeros.size > limiteLista) {
-            excedidoLimite = true
-        }
-
-        return excedidoLimite
-
+    fun inicializa() {
+        fuenteNumeros = listaNumeros.shuffled().toMutableList()
     }
+
+    fun dameUnNumero(): Int? = fuenteNumeros.removeFirstOrNull()
+
+
+    fun siguientesNumeros(cantidadNumeros:Int): MutableList<Int> {
+        lateinit var siguientesNumeros: MutableList<Int>
+        if (cantidadNumeros >= fuenteNumeros.size) {
+            siguientesNumeros = restoNumeros()
+        }
+        else {
+            val tamanoLista = fuenteNumeros.size
+            siguientesNumeros = fuenteNumeros.take(cantidadNumeros).toMutableList()
+            fuenteNumeros = fuenteNumeros.takeLast(tamanoLista-cantidadNumeros).toMutableList()
+    }
+    return siguientesNumeros
+}
+
+
+    fun restoNumeros(): MutableList<Int> {
+        val restoDeNumeros = fuenteNumeros.toMutableList()
+        fuenteNumeros.clear()
+        return restoDeNumeros
+    }
+
+
+
+
+
 
 }
 
@@ -71,9 +66,12 @@ fun main() {
     val numeroAleatorio = servicioNum1.dameUnNumero()
     val numeroAleatorio2 = servicioNum1.dameUnNumero()
 
-    val numerosRestantes = servicioNum1.dameNumerosRestantes()
+    val siguientesNum = servicioNum1.siguientesNumeros(5)
+
+    val restantes = servicioNum1.restoNumeros()
 
     println(numeroAleatorio)
     println(numeroAleatorio2)
-    println(numerosRestantes)
+    println(siguientesNum)
+    println(restantes)
 }
