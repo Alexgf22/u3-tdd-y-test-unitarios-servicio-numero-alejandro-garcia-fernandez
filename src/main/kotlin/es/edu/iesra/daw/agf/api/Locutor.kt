@@ -2,25 +2,38 @@ package es.edu.iesra.daw.agf.api
 
 class Locutor() {
 
-    private val bombo = Bombo()
-
     private class Bombo() {
-
-        private val numeros: MutableList<Int> = mutableListOf()
 
         fun sacarBola(): Int? {
             val rangoNumeros = ServicioNumeros(1, 76)
-            val numeroAleatorio = rangoNumeros.dameUnNumero()
-            if (numeroAleatorio != null) {
-                numeros.add(numeroAleatorio)
-            }
-            return numeroAleatorio
+
+            return rangoNumeros.dameUnNumero()
         }
 
-        fun quedanBolas(): Boolean = numeros.isNotEmpty()
     }
 
-    //fun cantaBolas()
+
+    private val bombo = Bombo()
+
+    fun cantarBolas() {
+        val numeros: MutableList<Int> = mutableListOf()
+
+        for (i in 1..75) {
+            val bola = bombo.sacarBola()
+            if (bola != null) {
+                numeros.add(bola)
+            }
+            println("Ha salido la bola número $bola")
+        }
+    }
+
+
+}
+
+
+
+fun main() {
+
 
 
 }
