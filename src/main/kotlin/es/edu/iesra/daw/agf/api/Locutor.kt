@@ -2,7 +2,7 @@ package es.edu.iesra.daw.agf.api
 
 class Locutor() {
 
-    private class Bombo() {
+    class Bombo() {
 
         fun sacarBola(): Int? {
             val rangoNumeros = ServicioNumeros(1, 76)
