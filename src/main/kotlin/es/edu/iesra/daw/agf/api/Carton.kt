@@ -6,8 +6,10 @@ class GeneradorDeCartones {
     private val numerosPorCarton = 15
 
 
-    inner class Carton(val numeros: List<Int>) {
+    inner class Carton(numeros: List<Int>) {
+        internal val id: Int = 0
         private val carton = Array(5) { IntArray(5) }
+        private var numerosMarcados = mutableListOf<Int>()
         private var lineas = 0
         private var bingo = false
         private val columnas = arrayOf(IntArray(5) { i -> i * 15 + 1 },
@@ -32,6 +34,11 @@ class GeneradorDeCartones {
                     carton[i][columnas.indexOf(columna)] = columna[i]
                 }
             }
+        }
+
+        fun marcarNumero(numero: Int) {
+
+
         }
 
         fun comprobarLinea(): Boolean {
@@ -86,7 +93,7 @@ class GeneradorDeCartones {
             for (i in 0..4) {
                 for (j in 0..4) {
                     if (carton[i][j] == numero) {
-                        carton[i][j] = 0
+                        carton[i][j] = -1
                         return
                     }
                 }

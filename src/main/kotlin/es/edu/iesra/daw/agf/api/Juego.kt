@@ -6,6 +6,10 @@ class Juego {
 
     private var bombo = Locutor.Bombo()
 
+    fun agregarCarton(carton: GeneradorDeCartones.Carton) {
+        cartones.add(carton)
+    }
+
 
     fun play() {
 
@@ -18,15 +22,21 @@ class Juego {
     }
 
 
+
     fun comprobarBingo() {
-
-
-
+        for (carton in cartones) {
+            if (carton.comprobarBingo()) {
+                println("BINGO en el cartón de ${carton.id}")
+            }
+        }
     }
+
 
     override fun toString(): String {
         return super.toString()
     }
+
+
 
 
 
