@@ -1,10 +1,10 @@
 package es.edu.iesra.daw.agf.api
 
 class Carton(val id: Int) {
-    val carton = Array(5) { IntArray(5) }
-    var lineas = 0
-    var bingo = false
-    val columnas = arrayOf(IntArray(5) { i -> i * 15 + 1 },
+    private val carton = Array(5) { IntArray(5) }
+    private var lineas = 0
+    private var bingo = false
+    private val columnas = arrayOf(IntArray(5) { i -> i * 15 + 1 },
         IntArray(5) { i -> i * 15 + 16 },
         IntArray(5) { i -> i * 15 + 31 },
         IntArray(5) { i -> i * 15 + 46 },
@@ -16,70 +16,70 @@ class Carton(val id: Int) {
                 carton[i][j] = 0
             }
         }
-        fill()
+        rellenar()
     }
 
-    private fun fill() {
-        for (col in columnas) {
-            col.shuffle()
+    private fun rellenar() {
+        for (columna in columnas) {
+            columna.shuffle()
             for (i in 0..2) {
-                carton[i][columnas.indexOf(col)] = col[i]
+                carton[i][columnas.indexOf(columna)] = columna[i]
             }
         }
     }
 
-    fun checkLine(): Boolean {
+    fun comprobarLinea(): Boolean {
         for (i in 0..4) {
             if (carton[i].sum() == 60) {
                 lineas++
                 return true
             }
-            var sum = 0
+            var suma = 0
             for (j in 0..4) {
-                sum += carton[j][i]
+                suma += carton[j][i]
             }
-            if (sum == 60) {
+            if (suma == 60) {
                 lineas++
                 return true
             }
         }
-        var sum = 0
+        var suma = 0
         for (i in 0..4) {
-            sum += carton[i][i]
+            suma += carton[i][i]
         }
-        if (sum == 60) {
+        if (suma == 60) {
             lineas++
             return true
         }
-        sum = 0
+        suma = 0
         for (i in 0..4) {
-            sum += carton[i][4 - i]
+            suma += carton[i][4 - i]
         }
-        if (sum == 60) {
+        if (suma == 60) {
             lineas++
             return true
         }
         return false
     }
 
-    fun checkBingo(): Boolean {
-        var sum = 0
+    fun comprobarBingo(): Boolean {
+        var suma = 0
         for (i in 0..4) {
             for (j in 0..4) {
-                sum += carton[i][j]
+                suma += carton[i][j]
             }
         }
-        if (sum == 60) {
+        if (suma == 60) {
             bingo = true
             return true
         }
         return false
     }
 
-    fun mark(number: Int) {
+    fun marcar(numero: Int) {
         for (i in 0..4) {
             for (j in 0..4) {
-                if (carton[i][j] == number) {
+                if (carton[i][j] == numero) {
                     carton[i][j] = 0
                     return
                 }
