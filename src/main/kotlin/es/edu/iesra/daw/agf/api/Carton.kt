@@ -81,22 +81,17 @@ class GeneradorDeCartones {
 
         fun comprobarLinea(): Boolean {
 
+
+
+
+
         }
 
         fun comprobarBingo(): Boolean {
 
         }
 
-        fun marcar(numero: Int) {
-            for (i in 0..4) {
-                for (j in 0..4) {
-                    if (carton[i][j] == numero) {
-                        carton[i][j] = -1
-                        return
-                    }
-                }
-            }
-        }
+
 
 
     }
