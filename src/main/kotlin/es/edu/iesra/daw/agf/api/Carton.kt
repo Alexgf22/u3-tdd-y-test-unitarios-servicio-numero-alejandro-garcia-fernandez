@@ -12,7 +12,6 @@ class GeneradorDeCartones {
         private var numerosMarcados = mutableListOf<Int>()
         private var lineas = 0
         private var bingo = false
-        //private val columnas : MutableList<Int> = mutableListOf()
 
         init {
 
@@ -70,7 +69,13 @@ class GeneradorDeCartones {
         }
 
         fun marcarNumero(numero: Int) {
-
+            for (fila in 0..4) {
+                for (columna in 0..4) {
+                    if (carton[fila][columna] == numero) {
+                        carton[fila][columna] = -1
+                    }
+                }
+            }
 
         }
 
