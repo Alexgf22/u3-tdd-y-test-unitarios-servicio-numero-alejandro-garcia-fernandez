@@ -3,7 +3,7 @@ package es.edu.iesra.daw.agf.api
 class GeneradorDeCartones {
 
     private val numeroMaximo = 75
-    private val numerosPorCarton = 15
+    private val numerosPorCarton = 20
 
 
     inner class Carton(numeros: List<Int>) {
@@ -12,28 +12,61 @@ class GeneradorDeCartones {
         private var numerosMarcados = mutableListOf<Int>()
         private var lineas = 0
         private var bingo = false
-        private val columnas = arrayOf(IntArray(5) { i -> i * 15 + 1 },
-            IntArray(5) { i -> i * 15 + 16 },
-            IntArray(5) { i -> i * 15 + 31 },
-            IntArray(5) { i -> i * 15 + 46 },
-            IntArray(5) { i -> i * 15 + 61 })
+        //private val columnas : MutableList<Int> = mutableListOf()
 
         init {
-            for (i in 0..4) {
-                for (j in 0..4) {
-                    carton[i][j] = 0
-                }
-            }
+
             rellenar()
         }
 
         private fun rellenar() {
-            for (columna in columnas) {
-                columna.shuffle()
-                for (i in 0..2) {
-                    carton[i][columnas.indexOf(columna)] = columna[i]
+            for (fila in 0..4) {
+                for (columna in 0..4) {
+
+                    when (fila) {
+                        0 -> if (columna == 0) {
+                            carton[fila][columna] = 0
+                        } else {
+                            val rangoNumeros = ServicioNumeros(1, 16)
+                            carton[fila][columna] = rangoNumeros.dameUnNumero()!!
+                        }
+
+                        1 -> if (columna == 1) {
+                            carton[fila][columna] = 0
+                        } else {
+                            val rangoNumeros = ServicioNumeros(16, 31)
+                            carton[fila][columna] = rangoNumeros.dameUnNumero()!!
+                        }
+
+                        2 -> if (columna == 2) {
+                            carton[fila][columna] = 0
+                        } else {
+                            val rangoNumeros = ServicioNumeros(31, 46)
+                            carton[fila][columna] = rangoNumeros.dameUnNumero()!!
+                        }
+
+                        3 -> if (columna == 3) {
+                            carton[fila][columna] = 0
+                        } else {
+                            val rangoNumeros = ServicioNumeros(46, 61)
+                            carton[fila][columna] = rangoNumeros.dameUnNumero()!!
+                        }
+
+                        4 -> if (columna == 4) {
+                            carton[fila][columna] = 0
+                        } else {
+                            val rangoNumeros = ServicioNumeros(61, 76)
+                            carton[fila][columna] = rangoNumeros.dameUnNumero()!!
+                        }
+
+
+                    }
+
+
                 }
             }
+
+
         }
 
         fun marcarNumero(numero: Int) {
@@ -42,51 +75,11 @@ class GeneradorDeCartones {
         }
 
         fun comprobarLinea(): Boolean {
-            for (i in 0..4) {
-                if (carton[i].sum() == 60) {
-                    lineas++
-                    return true
-                }
-                var suma = 0
-                for (j in 0..4) {
-                    suma += carton[j][i]
-                }
-                if (suma == 60) {
-                    lineas++
-                    return true
-                }
-            }
-            var suma = 0
-            for (i in 0..4) {
-                suma += carton[i][i]
-            }
-            if (suma == 60) {
-                lineas++
-                return true
-            }
-            suma = 0
-            for (i in 0..4) {
-                suma += carton[i][4 - i]
-            }
-            if (suma == 60) {
-                lineas++
-                return true
-            }
-            return false
+
         }
 
         fun comprobarBingo(): Boolean {
-            var suma = 0
-            for (i in 0..4) {
-                for (j in 0..4) {
-                    suma += carton[i][j]
-                }
-            }
-            if (suma == 60) {
-                bingo = true
-                return true
-            }
-            return false
+
         }
 
         fun marcar(numero: Int) {

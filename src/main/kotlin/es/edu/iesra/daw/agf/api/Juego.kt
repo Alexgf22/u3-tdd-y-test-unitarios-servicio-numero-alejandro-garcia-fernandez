@@ -15,11 +15,16 @@ class Juego {
 
     }
 
-    fun comprobarLinea() {
-
-
-
+    fun comprobarLinea(): Boolean {
+        for (carton in cartones) {
+            if (carton.comprobarLinea()) {
+                println("El cartón con el id: ${carton.id} ha obtenido una línea!")
+                return true
+            }
+        }
+        return false
     }
+
 
 
 
