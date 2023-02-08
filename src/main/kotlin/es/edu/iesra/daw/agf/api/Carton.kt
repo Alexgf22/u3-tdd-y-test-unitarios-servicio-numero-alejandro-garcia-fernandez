@@ -79,13 +79,46 @@ class GeneradorDeCartones {
 
         }
 
-        fun comprobarLinea(): Boolean {
+        fun comprobarLinea() {
 
 
+
+            // Comprobar lineas horizontales
+            val filasHorizontalesHechas = mutableListOf(0,0,0,0,0)
+
+            // Comprobar lineas verticales
+            val filasVerticalesHechas = mutableListOf(0,0,0,0,0)
+
+            for (fila in 0..4) {
+                // Lineas horizontales
+                if (carton[fila].sum() == -4 && filasHorizontalesHechas[fila] == 0) {
+                    lineas++
+                    filasHorizontalesHechas[fila] = 1
+                }
+
+
+                // Lineas verticales
+                var suma = 0
+                for (columna in 0..4) {
+                    suma += carton[columna][fila]
+
+                    if (suma == -4 && filasVerticalesHechas[columna] == 0) {
+                        lineas++
+                        filasVerticalesHechas[columna] = 1
+
+                    }
+                }
+
+            }
+
+
+            // Lineas diagonales
 
 
 
         }
+
+
 
         fun comprobarBingo(): Boolean {
 
@@ -93,8 +126,9 @@ class GeneradorDeCartones {
 
 
 
-
     }
+
+
 
 
 
