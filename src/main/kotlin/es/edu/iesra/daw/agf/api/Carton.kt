@@ -6,8 +6,7 @@ class GeneradorDeCartones {
     private val numerosPorCarton = 20
 
 
-    inner class Carton {
-        internal val id: Int = 0
+    class Carton(id: Int) {
         private val carton = Array(5) { IntArray(5) }
         private var numerosMarcados = mutableListOf<Int>()
         private var lineas = 0
@@ -18,11 +17,11 @@ class GeneradorDeCartones {
         }
 
         private fun rellenar() {
-            for (fila in 0..4) {
-                for (columna in 0..4) {
+            for (fila in 0 until carton.size) {
+                for (columna in 0 until carton[0].size) {
 
-                    when (fila) {
-                        0 -> if (columna == 0) {
+                    when (columna) {
+                        0 -> if (fila == 0) {
                             carton[fila][columna] = 0
                         } else {
                             val rangoNumeros = ServicioNumeros(1, 16)
@@ -210,8 +209,17 @@ class GeneradorDeCartones {
     }
 
 
-    private fun generarUnCarton(): Carton {
-        return Carton()
+
+    private val cartonesId: MutableList<Int> = mutableListOf()
+    fun generarUnCarton(): Carton {
+        val id = (1..999).random()
+        lateinit var carton: Carton
+        if(id !in cartonesId) {
+            cartonesId.add(id)
+            carton = Carton(id)
+        }
+        return carton
+
     }
 
     fun generarVariosCartones(cantidad: Int): List<Carton> {

@@ -5,28 +5,30 @@ class Juego(private val numeroCartones: Int) {
     private val bombo = Locutor.Bombo()
 
     init {
-        for (i in 0 until numeroCartones) {
-            cartones.add(GeneradorDeCartones.Carton(i + 1))
-        }
+        lateinit var generadorCartones: GeneradorDeCartones
+        cartones.add(generadorCartones.generarVariosCartones(5))
+
     }
 
     fun jugar() {
-        while (cartones.none { it.haGanado() }) {
-            val numero = bombo.extraerBola()
+        while (cartones.none { it.comprobarBingo() }) {
+            val numero = bombo.sacarBola()
             for (carton in cartones) {
-                carton.marcarNumero(numero)
-                if (carton.haGanadoLínea()) {
+                if (numero != null) {
+                    carton.marcarNumero(numero)
+                }
+                if (carton.comprobarLinea()) {
                     println("Carton ${carton.id} ha ganado una línea")
                 }
             }
         }
-        val ganador = cartones.first { it.haGanado() }
+        val ganador = cartones.first { it.comprobarBingo() }
         println("Carton ${ganador.id} ha ganado el bingo")
     }
 
     fun obtenerResumen() {
         for (carton in cartones) {
-            println("Carton ${carton.id}: Líneas ganadas ${carton.lineasGanadas()}, Bingo: ${carton.haGanado()}")
+            println("Carton ${carton.id}: Líneas ganadas ${carton.comprobarLinea()}, Bingo: ${carton.comprobarBingo()}")
         }
     }
 }
