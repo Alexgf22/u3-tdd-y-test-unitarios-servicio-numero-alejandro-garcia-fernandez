@@ -82,9 +82,11 @@ class Carton(id: Int) {
     private val filasVerticalesHechas = mutableListOf(0,0,0,0,0)
 
     // Comprobar lineas diagonales
-    private val filasDiagonalesHechas = mutableListOf(0,0,0,0)
+    private val filasDiagonalesHechas = mutableListOf(0,0,0,0,0)
 
-    fun comprobarLinea() {
+    fun comprobarLinea(): Boolean {
+
+        var esLinea = false
 
 
         for (fila in 0..4) {
@@ -93,6 +95,7 @@ class Carton(id: Int) {
             if (carton[fila].sum() == -4 && filasHorizontalesHechas[fila] == 0) {
                 lineas++
                 filasHorizontalesHechas[fila] = 1
+                esLinea = true
             }
 
 
@@ -104,6 +107,7 @@ class Carton(id: Int) {
                 if (suma == -4 && filasVerticalesHechas[columna] == 0) {
                     lineas++
                     filasVerticalesHechas[columna] = 1
+                    esLinea = true
 
                 }
             }
@@ -132,6 +136,7 @@ class Carton(id: Int) {
             if(sumaPrimeraDiagonal == -4 && filasDiagonalesHechas[0] == 0) {
                 lineas++
                 filasDiagonalesHechas[0] = 1
+                esLinea = true
             }
         }
 
@@ -149,6 +154,7 @@ class Carton(id: Int) {
             if(sumaSegundaDiagonal == -4 && filasDiagonalesHechas[1] == 0) {
                 lineas++
                 filasDiagonalesHechas[1] = 1
+                esLinea = true
             }
         }
 
@@ -166,6 +172,7 @@ class Carton(id: Int) {
             if(sumaTerceraDiagonal == -4 && filasDiagonalesHechas[2] == 0) {
                 lineas++
                 filasDiagonalesHechas[2] = 1
+                esLinea = true
             }
         }
 
@@ -183,6 +190,7 @@ class Carton(id: Int) {
             if(sumaCuartaDiagonal == -4 && filasDiagonalesHechas[3] == 0) {
                 lineas++
                 filasDiagonalesHechas[3] = 1
+                esLinea = true
             }
         }
 
@@ -197,7 +205,15 @@ class Carton(id: Int) {
                 sumaQuintaDiagonal += carton[quintaDiagonal[0]][quintaDiagonal[1]]
 
             }
+
+            if(sumaQuintaDiagonal == -4 && filasDiagonalesHechas[4] == 0) {
+                lineas++
+                filasDiagonalesHechas[4] = 1
+                esLinea = true
+            }
         }
+
+        return esLinea
 
 
     }
