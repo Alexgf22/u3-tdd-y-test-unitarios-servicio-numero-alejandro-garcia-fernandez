@@ -120,17 +120,54 @@ class GeneradorDeCartones {
 
             /*
             Coordenadas de inicio diagonales:
+            Primera coordenada es la fila y la segunda coordenada es la columna
             (1,0) ; (0,1) ; (0,3) ; (1,4)
              */
 
             var sumaPrimeraDiagonal = 0
 
-            var primeraDiagonal = intArrayOf(1,0)
+            val primeraDiagonal = intArrayOf(1,0)
             for(i in 0..3) {
                 if(i != 0) {
                     primeraDiagonal[0] += 1
                     primeraDiagonal[1] += 1
                     sumaPrimeraDiagonal += carton[primeraDiagonal[0]][primeraDiagonal[1]]
+                }
+            }
+
+
+            var sumaSegundaDiagonal = 0
+
+            val segundaDiagonal = intArrayOf(0,1)
+            for(i in 0..3) {
+                if(i != 0) {
+                    segundaDiagonal[0] += 1
+                    segundaDiagonal[1] += 1
+                    sumaSegundaDiagonal += carton[segundaDiagonal[0]][segundaDiagonal[1]]
+                }
+            }
+
+
+            var sumaTerceraDiagonal = 0
+
+            val terceraDiagonal = intArrayOf(0,3)
+            for(i in 0..3) {
+                if(i != 0) {
+                    terceraDiagonal[0] += 1
+                    terceraDiagonal[1] -= 1
+                    sumaTerceraDiagonal += carton[terceraDiagonal[0]][terceraDiagonal[1]]
+                }
+            }
+
+
+            var sumaCuartaDiagonal = 0
+
+            val cuartaDiagonal = intArrayOf(1,4)
+            for(i in 0..3) {
+                if(i != 0) {
+                    cuartaDiagonal[0] += 1
+                    cuartaDiagonal[1] -= 1
+                    sumaCuartaDiagonal += carton[cuartaDiagonal[0]][cuartaDiagonal[1]]
                 }
             }
 
