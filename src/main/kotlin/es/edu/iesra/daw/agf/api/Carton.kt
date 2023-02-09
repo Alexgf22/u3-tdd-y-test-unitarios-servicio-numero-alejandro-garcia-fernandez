@@ -2,7 +2,7 @@ package es.edu.iesra.daw.agf.api
 
 
 
-class Carton(id: Int) {
+class Carton(val id: Int) {
     private val carton = Array(5) { IntArray(5) }
     private var numerosMarcados = mutableListOf<Int>()
     private var lineas = 0

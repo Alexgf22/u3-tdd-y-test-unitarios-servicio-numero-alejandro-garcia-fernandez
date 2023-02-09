@@ -2,14 +2,13 @@ package es.edu.iesra.daw.agf.api
 
 class Juego(private val numeroCartones: Int) {
     private val cartones = mutableListOf<Carton>()
-    private val bombo = Locutor.Bombo()
+    private val bombo = Bombo()
 
     init {
-        for(i in 0..numeroCartones) {
-            val generadorDeCartones = MutableList<Carton>()
-            val carton = generadorDeCartones.generarVariosCartones(numeroCartones)
+        for (i in 0..numeroCartones) {
+            val carton: Carton = GeneradorDeCartones().generarUnCarton()
+            cartones.add(carton)
         }
-
     }
 
     fun jugar() {

@@ -8,7 +8,7 @@ class GeneradorDeCartones {
 
 
     private val cartonesId: MutableList<Int> = mutableListOf()
-    private fun generarUnCarton(): Carton {
+    fun generarUnCarton(): Carton {
         val id = (1..999).random()
         lateinit var carton: Carton
         if(id !in cartonesId) {
