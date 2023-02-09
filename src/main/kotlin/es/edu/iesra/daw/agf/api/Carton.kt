@@ -6,7 +6,7 @@ class GeneradorDeCartones {
     private val numerosPorCarton = 20
 
 
-    inner class Carton(numeros: List<Int>) {
+    inner class Carton {
         internal val id: Int = 0
         private val carton = Array(5) { IntArray(5) }
         private var numerosMarcados = mutableListOf<Int>()
@@ -133,6 +133,11 @@ class GeneradorDeCartones {
                     primeraDiagonal[1] += 1
                     sumaPrimeraDiagonal += carton[primeraDiagonal[0]][primeraDiagonal[1]]
                 }
+
+                if(sumaPrimeraDiagonal == -4 && filasDiagonalesHechas[0] == 0) {
+                    lineas++
+                    filasDiagonalesHechas[0] = 1
+                }
             }
 
 
@@ -144,6 +149,11 @@ class GeneradorDeCartones {
                     segundaDiagonal[0] += 1
                     segundaDiagonal[1] += 1
                     sumaSegundaDiagonal += carton[segundaDiagonal[0]][segundaDiagonal[1]]
+                }
+
+                if(sumaSegundaDiagonal == -4 && filasDiagonalesHechas[1] == 0) {
+                    lineas++
+                    filasDiagonalesHechas[1] = 1
                 }
             }
 
@@ -157,6 +167,11 @@ class GeneradorDeCartones {
                     terceraDiagonal[1] -= 1
                     sumaTerceraDiagonal += carton[terceraDiagonal[0]][terceraDiagonal[1]]
                 }
+
+                if(sumaTerceraDiagonal == -4 && filasDiagonalesHechas[2] == 0) {
+                    lineas++
+                    filasDiagonalesHechas[2] = 1
+                }
             }
 
 
@@ -168,6 +183,11 @@ class GeneradorDeCartones {
                     cuartaDiagonal[0] += 1
                     cuartaDiagonal[1] -= 1
                     sumaCuartaDiagonal += carton[cuartaDiagonal[0]][cuartaDiagonal[1]]
+                }
+
+                if(sumaCuartaDiagonal == -4 && filasDiagonalesHechas[3] == 0) {
+                    lineas++
+                    filasDiagonalesHechas[3] = 1
                 }
             }
 
@@ -190,12 +210,8 @@ class GeneradorDeCartones {
     }
 
 
-
-
-
     private fun generarUnCarton(): Carton {
-        val numeros = (1..numeroMaximo).shuffled().take(numerosPorCarton).sorted()
-        return Carton(numeros)
+        return Carton()
     }
 
     fun generarVariosCartones(cantidad: Int): List<Carton> {
