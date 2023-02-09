@@ -32,8 +32,3 @@ class Locutor() {
 
 
 
-fun main() {
-
-
-
-}

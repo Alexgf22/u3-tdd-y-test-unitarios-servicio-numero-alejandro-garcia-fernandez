@@ -14,7 +14,6 @@ class GeneradorDeCartones {
         private var bingo = false
 
         init {
-
             rellenar()
         }
 
@@ -72,6 +71,7 @@ class GeneradorDeCartones {
             for (fila in 0..4) {
                 for (columna in 0..4) {
                     if (carton[fila][columna] == numero) {
+                        numerosMarcados.add(carton[fila][columna])
                         carton[fila][columna] = -1
                     }
                 }
@@ -79,17 +79,21 @@ class GeneradorDeCartones {
 
         }
 
+
+        // Comprobar lineas horizontales
+        private val filasHorizontalesHechas = mutableListOf(0,0,0,0,0)
+
+        // Comprobar lineas verticales
+        private val filasVerticalesHechas = mutableListOf(0,0,0,0,0)
+
+        // Comprobar lineas diagonales
+        private val filasDiagonalesHechas = mutableListOf(0,0,0,0)
+
         fun comprobarLinea() {
 
 
-
-            // Comprobar lineas horizontales
-            val filasHorizontalesHechas = mutableListOf(0,0,0,0,0)
-
-            // Comprobar lineas verticales
-            val filasVerticalesHechas = mutableListOf(0,0,0,0,0)
-
             for (fila in 0..4) {
+
                 // Lineas horizontales
                 if (carton[fila].sum() == -4 && filasHorizontalesHechas[fila] == 0) {
                     lineas++
@@ -114,6 +118,21 @@ class GeneradorDeCartones {
 
             // Lineas diagonales
 
+            /*
+            Coordenadas de inicio diagonales:
+            (1,0) ; (0,1) ; (0,3) ; (1,4)
+             */
+
+            var sumaPrimeraDiagonal = 0
+
+            var primeraDiagonal = intArrayOf(1,0)
+            for(i in 0..3) {
+                if(i != 0) {
+                    primeraDiagonal[0] += 1
+                    primeraDiagonal[1] += 1
+                    sumaPrimeraDiagonal += carton[primeraDiagonal[0]][primeraDiagonal[1]]
+                }
+            }
 
 
         }
@@ -121,6 +140,11 @@ class GeneradorDeCartones {
 
 
         fun comprobarBingo(): Boolean {
+
+            if(filasHorizontalesHechas.sum() == 5) {
+                bingo = true
+            }
+            return bingo
 
         }
 
