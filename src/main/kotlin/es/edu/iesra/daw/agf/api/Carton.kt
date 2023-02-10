@@ -7,6 +7,7 @@ class Carton(val id: Int) {
     private var numerosMarcados = mutableListOf<Int>()
     private var lineas = 0
     private var bingo = false
+    private var numerosSalidos = Array(5) {IntArray(5)}
 
     init {
         rellenar()
@@ -67,6 +68,7 @@ class Carton(val id: Int) {
             for (columna in 0..4) {
                 if (carton[fila][columna] == numero) {
                     numerosMarcados.add(carton[fila][columna])
+                    numerosSalidos[fila][columna] = numero
                     carton[fila][columna] = -1
                 }
             }
