@@ -3,7 +3,7 @@ package es.edu.iesra.daw.agf.api
 
 
 class Carton(val id: Int) {
-    private val carton = Array(5) { IntArray(5) }
+    private val carton = Array(5) {IntArray(5)}
     private var numerosMarcados = mutableListOf<Int>()
     private var lineas = 0
     private var bingo = false
@@ -13,7 +13,7 @@ class Carton(val id: Int) {
         rellenar()
     }
 
-    private fun rellenar() {
+    fun rellenar(): Array<IntArray> {
         for (fila in carton.indices) {
             for (columna in 0 until carton[0].size) {
 
@@ -60,8 +60,12 @@ class Carton(val id: Int) {
             }
         }
 
+        return carton
+
 
     }
+
+
 
     fun marcarNumero(numero: Int) {
         for (fila in 0..4) {
@@ -234,6 +238,19 @@ class Carton(val id: Int) {
 
 
     }
+
+
+
+
+fun main() {
+
+    val carton = Carton(6)
+    print(carton.rellenar())
+}
+
+
+
+
 
 
 
