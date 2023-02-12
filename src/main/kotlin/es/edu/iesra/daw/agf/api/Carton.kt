@@ -2,12 +2,16 @@ package es.edu.iesra.daw.agf.api
 
 
 
-class Carton(val id: Int) {
+class Carton(private val idCarton: String, numeros: List<List<Int>>) {
     private val carton = Array(5) {IntArray(5)}
     private var numerosMarcados = mutableListOf<Int>()
     private var lineas = 0
     private var bingo = false
     private var numerosSalidos = Array(5) {IntArray(5)}
+    //private lateinit var estadoBingo : MutableMap<Int, Casilla>
+    //private lateinit var estadoLineas : MutableList<Linea>
+    //val cantaLinea = Signal<Linea>()
+    //val cantaBingo = Signal<NumerosCarton>()
 
     init {
         rellenar()
@@ -66,7 +70,9 @@ class Carton(val id: Int) {
     }
 
 
-
+    /**
+     * Aquí marco un número mirando todas las casillas
+     */
     fun marcarNumero(numero: Int) {
         for (fila in 0..4) {
             for (columna in 0..4) {
@@ -77,6 +83,8 @@ class Carton(val id: Int) {
                 }
             }
         }
+        comprobarLinea()
+        comprobarBingo()
 
     }
 
@@ -242,11 +250,6 @@ class Carton(val id: Int) {
 
 
 
-fun main() {
-
-    val carton = Carton(6)
-    print(carton.rellenar())
-}
 
 
 

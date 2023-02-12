@@ -1,8 +1,14 @@
 package es.edu.iesra.daw.agf.api
 
-class Juego(private val numeroCartones: Int) {
-    private val cartones = mutableListOf<Carton>()
-    private val bombo = Bombo()
+class Juego() {
+    private var cartones = mutableListOf<Carton>()
+    private var bombo = Bombo()
+    private var locutor = Locutor()
+    private var hayBingo: Boolean = false
+    private var numeroCartones: Int = 0
+    private var generadorCartones = GeneradorDeCartones()
+    //private var registro: Registro
+
 
     init {
         for (i in 0..numeroCartones) {
