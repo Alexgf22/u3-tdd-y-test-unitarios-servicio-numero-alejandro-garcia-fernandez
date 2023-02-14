@@ -7,7 +7,7 @@ class Carton(private val idCarton: String, numeros: List<List<Int>>) {
     private var numerosMarcados = mutableListOf<Int>()
     private var lineas = 0
     private var bingo = false
-    private var numerosSalidos = Array(5) {IntArray(5)}
+    private var numerosCantados = Array(5) {IntArray(5)}
     //private lateinit var estadoBingo : MutableMap<Int, Casilla>
     //private lateinit var estadoLineas : MutableList<Linea>
     //val cantaLinea = Signal<Linea>()
@@ -78,7 +78,7 @@ class Carton(private val idCarton: String, numeros: List<List<Int>>) {
             for (columna in 0..4) {
                 if (carton[fila][columna] == numero) {
                     numerosMarcados.add(carton[fila][columna])
-                    numerosSalidos[fila][columna] = numero
+                    numerosCantados[fila][columna] = numero
                     carton[fila][columna] = -1
                 }
             }
