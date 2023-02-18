@@ -1,11 +1,18 @@
 package es.edu.iesra.daw.agf.api
 
-class Bombo() {
 
-    fun sacarBola(): Int? {
-        val rangoNumeros = ServicioNumeros(1, 76)
+object Bombo {
 
-        return rangoNumeros.dameUnNumero()
+    private lateinit var servicioNumeros: ServicioNumeros
+    init {
+        configura()
+    }
+    fun configura(servicioNumeros: ServicioNumeros = ServicioNumeros(1,76)) {
+        this.servicioNumeros = servicioNumeros
+    }
+
+    fun nuevaBola(): Int? {
+        return servicioNumeros.dameUnNumero()
     }
 
 }

@@ -1,41 +1,87 @@
 package es.edu.iesra.daw.agf.api
 
-class Juego() {
-    private var cartones = mutableListOf<Carton>()
-    private var bombo = Bombo()
-    private var locutor = Locutor()
+/*
+El juego consistirá en lo siguiente:
+Configura tu juego: generar un número X de cartones.
+Iterar la dinámica siguiente hasta que algún cartón consiga bingo.
+    El bombo genera una bola marcada con un número.
+    Se marca en los X cartones el número marcado en la bola.
+    Se chequea si algún cartón de los X cartones, ha conseguido línea.
+    Se chequea si algún cartón de los X cartones, ha conseguido bingo.
+Resume el juego.
+Cada vez que se consiga una línea, se mostrará el identificador del
+cartón y las posiciones y número de cartones marcados para conseguir la línea.
+Cuando se consiga una línea, se mostrará el identificador del cartón
+y las posiciones y número de cartones marcados.
+Al finalizar, se podrá pedir un resumen por cartón, en el que se muestran
+los identificadores de los cartones y las líneas conseguidas, así como
+el bingo del cartón ganador.
+ */
+
+data class ConfigJuego(val nunCartones: Int = 5, val bombo: Bombo = Bombo, val locutor: Locutor =Locutor, val generador: GeneradorDeCartones = GeneradorDeCartones, val registro: Registro = Registro)
+
+object Juego {
+
     private var hayBingo: Boolean = false
-    private var numeroCartones: Int = 0
-    private var generadorCartones = GeneradorDeCartones()
-    //private var registro: Registro
+    private var numCartones: Int = 0
+    private lateinit var locutor: Locutor
+    private lateinit var generador: GeneradorDeCartones
+    private lateinit var cartones: List<Carton>
+    private lateinit var bombo: Bombo
+    private lateinit var registro: Registro
 
-
-    init {
-        for (i in 0..numeroCartones) {
-            val carton: Carton = GeneradorDeCartones().generarUnCarton()
-            cartones.add(carton)
+    fun configura(config : ConfigJuego= ConfigJuego()) {
+        numCartones = config.nunCartones
+        generador = config.generador
+        locutor = config.locutor.apply {
+            configura(config.bombo)
         }
+        registro = config.registro
+        montaJuego()
+
     }
 
-    fun jugar() {
-        while (cartones.none { it.comprobarBingo() }) {
-            val numero = bombo.sacarBola()
-            for (carton in cartones) {
-                if (numero != null) {
-                    carton.marcarNumero(numero)
-                }
-                if (carton.comprobarLinea()) {
-                    println("Carton ${carton.id} ha ganado una línea")
-                }
+    /**
+     * Monta el bingo, creando los cartones y conecta los observers del locutor y de los cartones.
+     */
+    private fun montaJuego(){
+
+        //Me creo los cartones,
+        cartones = generador.genera(numCartones)
+
+        //Añado como observadores del locutor.
+        cartones.forEach {carton ->
+            locutor.nuevoNumero.conectar (carton::marcar)
+        }
+        locutor.nuevoNumero.conectar (registro::nuevoNumero)
+
+        //Observadores de cartones
+        cartones.forEach {carton ->
+            carton.cantaBingo.conectar ( registro::bingoCantado )
+            carton.cantaLinea.conectar ( registro::lineaCantada )
+            carton.cantaBingo.conectar ( this::bingoCantado )
+
+        }
+
+    }
+
+    /**
+     * Pone en juego el bingo.
+     */
+    fun play() {
+        while (!hayBingo && locutor.anunciaNuevaBola()){
+            cartones.forEach { carton ->
+                carton.compruebaSiLinea()
+                carton.compruebaSiBingo()
             }
         }
-        val ganador = cartones.first { it.comprobarBingo() }
-        println("Carton ${ganador.id} ha ganado el bingo")
     }
 
-    fun obtenerResumen() {
-        for (carton in cartones) {
-            println("Carton ${carton.id}: Líneas ganadas ${carton.comprobarLinea()}, Bingo: ${carton.comprobarBingo()}")
-        }
+    /**
+     * Callback que se llama cuando hay bingo
+     */
+    private fun bingoCantado(carton: NumerosCarton) {
+        hayBingo = true
     }
+
 }

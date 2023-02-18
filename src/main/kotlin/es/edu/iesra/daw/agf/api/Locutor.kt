@@ -1,19 +1,32 @@
 package es.edu.iesra.daw.agf.api
 
-class Locutor() {
 
-    private val bombo = Bombo()
 
-    fun cantarBolas() {
-        val numeros: MutableList<Int> = mutableListOf()
+/*
+Los locutores de bingo supervisan las partidas de bingo que se juegan en los clubes de bingo.
+Llaman a los números hasta que se produce un ganador.
+ */
+object Locutor{
+    val nuevoNumero = Signal<Int>()
+    lateinit var bombo:Bombo
 
-        for (i in 1..75) {
-            val bola = bombo.sacarBola()
-            if (bola != null) {
-                numeros.add(bola)
-            }
-            println("Ha salido la bola número $bola")
+    /**
+     * Configura el objeto
+     */
+    fun configura(bombo:Bombo = Bombo ){
+        this.bombo = bombo
+    }
+
+    /**
+     * Saca nueva bola y anuncia el numero
+     */
+    fun anunciaNuevaBola():Boolean{
+        var hayBolas = false
+        bombo.nuevaBola()?.let{
+            nuevoNumero.emitir(it)
+            hayBolas = true
         }
+        return hayBolas
     }
 
 

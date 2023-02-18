@@ -1,255 +1,229 @@
 package es.edu.iesra.daw.agf.api
 
 
+/**
+ * Representa los posibles estados de las casillas.
+ */
+enum class EstadoCasilla {
+    MARCADO, NOMARCADO, VACIO
+}
 
+/**
+ * Representa las casillas del cartón
+ */
+data class Casilla(val f:Int, val c:Int, val numero:Int, var estado: EstadoCasilla = EstadoCasilla.NOMARCADO)
+
+/**
+ * Representa los posibles estados de una línea.
+ */
+enum class LineaCantada {
+    SI, NO
+}
+
+/**
+ * Representa una línea del cartón y su estado, y su estado. Estructura util para saber si hay o no línea,.
+ */
+data class Linea(val idCarton: String, val linea: MutableList<Casilla> =mutableListOf(), var cantada:LineaCantada=LineaCantada.NO)
+
+/**
+ * Representa un cartón en modo data class. Util para pasar la info del cartón.
+ */
+data class NumerosCarton(val idCarton: String, val numeros: List<MutableList<Casilla>> = List(5){ mutableListOf() })
+
+/*
+Cada cartón tendrá un identificador.
+Cada cartón cuenta con cinco columnas y cinco filas, con números generados al azar.
+    La primera columna incluye 4 números del 1 al 15
+    la segunda desde el 16 al 30
+    la tercera desde el 31 al 45
+    el cuarto desde el 46 al 60 y la quinta desde el 61 al 75.
+ */
 class Carton(private val idCarton: String, numeros: List<List<Int>>) {
-    private val carton = Array(5) {IntArray(5)}
-    private var numerosMarcados = mutableListOf<Int>()
-    private var lineas = 0
-    private var bingo = false
-    private var numerosCantados = Array(5) {IntArray(5)}
-    //private lateinit var estadoBingo : MutableMap<Int, Casilla>
-    //private lateinit var estadoLineas : MutableList<Linea>
-    //val cantaLinea = Signal<Linea>()
-    //val cantaBingo = Signal<NumerosCarton>()
+    private lateinit var carton : List<MutableList<Casilla>>
+    private lateinit var estadoBingo : MutableMap<Int, Casilla>
+    private lateinit var estadoLineas : MutableList<Linea>
+    val cantaLinea = Signal<Linea>()
+    val cantaBingo = Signal<NumerosCarton>()
 
-    init {
-        rellenar()
+
+    init{
+        montaCarton(numeros)
+        montaEstadoBingo()
+        montaEstadoLineas()
+        println(carton)
+        estadoLineas.forEach { println(it) }
     }
-
-    fun rellenar(): Array<IntArray> {
-        for (fila in carton.indices) {
-            for (columna in 0 until carton[0].size) {
-
-                when (columna) {
-                    0 -> if (fila == 0) {
-                        carton[fila][columna] = 0
-                    } else {
-                        val rangoNumeros = ServicioNumeros(1, 16)
-                        carton[fila][columna] = rangoNumeros.dameUnNumero()!!
-                    }
-
-                    1 -> if (fila == 1) {
-                        carton[fila][columna] = 0
-                    } else {
-                        val rangoNumeros = ServicioNumeros(16, 31)
-                        carton[fila][columna] = rangoNumeros.dameUnNumero()!!
-                    }
-
-                    2 -> if (fila == 2) {
-                        carton[fila][columna] = 0
-                    } else {
-                        val rangoNumeros = ServicioNumeros(31, 46)
-                        carton[fila][columna] = rangoNumeros.dameUnNumero()!!
-                    }
-
-                    3 -> if (fila == 3) {
-                        carton[fila][columna] = 0
-                    } else {
-                        val rangoNumeros = ServicioNumeros(46, 61)
-                        carton[fila][columna] = rangoNumeros.dameUnNumero()!!
-                    }
-
-                    4 -> if (fila == 4) {
-                        carton[fila][columna] = 0
-                    } else {
-                        val rangoNumeros = ServicioNumeros(61, 76)
-                        carton[fila][columna] = rangoNumeros.dameUnNumero()!!
-                    }
-
-
-                }
-
-
-            }
-        }
-
-        return carton
-
-
-    }
-
 
     /**
-     * Aquí marco un número mirando todas las casillas
+     * Monta el carton a partir de la lista de números.
      */
-    fun marcarNumero(numero: Int) {
-        for (fila in 0..4) {
-            for (columna in 0..4) {
-                if (carton[fila][columna] == numero) {
-                    numerosMarcados.add(carton[fila][columna])
-                    numerosCantados[fila][columna] = numero
-                    carton[fila][columna] = -1
-                }
-            }
+    private fun montaCarton(numeros: List<List<Int>>) {
+        val dimension = numeros.size
+        carton = List(dimension){
+            mutableListOf()
         }
-        comprobarLinea()
-        comprobarBingo()
+        var filasCarton = 0
+        var columnasCarton = 0
 
+        numeros.forEach {
+            it.forEach{numero ->
+                if (filasCarton==columnasCarton) {
+                    carton[filasCarton].add(Casilla(filasCarton, columnasCarton, -1, EstadoCasilla.VACIO))
+                    filasCarton++
+                }
+                carton[filasCarton].add(Casilla(filasCarton, columnasCarton, numero, EstadoCasilla.NOMARCADO))
+
+                filasCarton++
+            }
+            columnasCarton++
+            filasCarton=0
+        }.also {
+            //Rellena la ultima casilla
+            carton[dimension-1].add(Casilla(dimension-1, dimension-1, -1, EstadoCasilla.VACIO))
+        }
     }
 
-
-    // Comprobar lineas horizontales
-    private val filasHorizontalesHechas = mutableListOf(0,0,0,0,0)
-
-    // Comprobar lineas verticales
-    private val filasVerticalesHechas = mutableListOf(0,0,0,0,0)
-
-    // Comprobar lineas diagonales
-    private val filasDiagonalesHechas = mutableListOf(0,0,0,0,0)
-
-    fun comprobarLinea(): Boolean {
-
-        var esLinea = false
-
-
-        for (fila in 0..4) {
-
-            // Lineas horizontales
-            if (carton[fila].sum() == -4 && filasHorizontalesHechas[fila] == 0) {
-                lineas++
-                filasHorizontalesHechas[fila] = 1
-                esLinea = true
+    /**
+     * Monta la estructura de datos para saber si hay línea
+     */
+    private fun montaEstadoLineas() {
+        var indiceEstadoLinea = 0
+        estadoLineas = MutableList(carton.size*3) {
+            Linea(idCarton)
+        }
+        //Lineas Horizontales
+        carton.forEach { filaCasillas ->
+            filaCasillas.filter { it.estado!= EstadoCasilla.VACIO}.forEach { casilla ->
+                estadoLineas[indiceEstadoLinea].linea.add(casilla)
             }
-
-
-            // Lineas verticales
-            var suma = 0
-            for (columna in 0..4) {
-                suma += carton[columna][fila]
-
-                if (suma == -4 && filasVerticalesHechas[columna] == 0) {
-                    lineas++
-                    filasVerticalesHechas[columna] = 1
-                    esLinea = true
-
-                }
-            }
-
+            indiceEstadoLinea++
+        }
+        //Lineas Verticales
+        val dimension = carton.size
+        for(indiceCasilla in 0 until dimension) {
+            for (indiceLista in 0 until dimension)
+                if (carton[indiceLista][indiceCasilla].estado!=EstadoCasilla.VACIO)
+                    estadoLineas[indiceEstadoLinea].linea.add(carton[indiceLista][indiceCasilla])
+            indiceEstadoLinea++
         }
 
+        //Diagonales I-D\
+        for(indice in 0 until dimension-1) {
+            estadoLineas[indiceEstadoLinea].linea.add(carton[indice][indice+1])
+            estadoLineas[indiceEstadoLinea+1].linea.add(carton[indice+1][indice])
+        }
 
-        // Lineas diagonales
-
+        //TODO: Extraer las lineas diagonales que van de derecha a izquierda.
+        //Diagonales D-I/
         /*
-        Coordenadas de inicio diagonales:
-        Primera coordenada es la fila y la segunda coordenada es la columna
-        (1,0) ; (0,1) ; (0,3) ; (1,4) ; (0,4)
-         */
+        for(indice in 0 until dimension-1) {
+            estadoLineas[indiceEstadoLinea].linea.add(carton[indice][indice+1])
+            estadoLineas[indiceEstadoLinea+1].linea.add(carton[indice+1][indice])
+        }
+        */
+    }
 
-        var sumaPrimeraDiagonal = 0
-
-        val primeraDiagonal = intArrayOf(1,0)
-        for(i in 0..3) {
-            if(i != 0) {
-                primeraDiagonal[0] += 1
-                primeraDiagonal[1] += 1
-                sumaPrimeraDiagonal += carton[primeraDiagonal[0]][primeraDiagonal[1]]
-            }
-
-            if(sumaPrimeraDiagonal == -4 && filasDiagonalesHechas[0] == 0) {
-                lineas++
-                filasDiagonalesHechas[0] = 1
-                esLinea = true
+    /**
+     * Monta la estructura de datos para saber si hay bingo.
+     */
+    private fun montaEstadoBingo(){
+        estadoBingo = mutableMapOf()
+        carton.forEach { filaCasillas ->
+            filaCasillas.filter { it.estado!= EstadoCasilla.VACIO}.forEach { casilla ->
+                estadoBingo[casilla.numero] = casilla
             }
         }
-
-
-        var sumaSegundaDiagonal = 0
-
-        val segundaDiagonal = intArrayOf(0,1)
-        for(i in 0..3) {
-            if(i != 0) {
-                segundaDiagonal[0] += 1
-                segundaDiagonal[1] += 1
-                sumaSegundaDiagonal += carton[segundaDiagonal[0]][segundaDiagonal[1]]
-            }
-
-            if(sumaSegundaDiagonal == -4 && filasDiagonalesHechas[1] == 0) {
-                lineas++
-                filasDiagonalesHechas[1] = 1
-                esLinea = true
-            }
-        }
-
-
-        var sumaTerceraDiagonal = 0
-
-        val terceraDiagonal = intArrayOf(0,3)
-        for(i in 0..3) {
-            if(i != 0) {
-                terceraDiagonal[0] += 1
-                terceraDiagonal[1] -= 1
-                sumaTerceraDiagonal += carton[terceraDiagonal[0]][terceraDiagonal[1]]
-            }
-
-            if(sumaTerceraDiagonal == -4 && filasDiagonalesHechas[2] == 0) {
-                lineas++
-                filasDiagonalesHechas[2] = 1
-                esLinea = true
-            }
-        }
-
-
-        var sumaCuartaDiagonal = 0
-
-        val cuartaDiagonal = intArrayOf(1,4)
-        for(i in 0..3) {
-            if(i != 0) {
-                cuartaDiagonal[0] += 1
-                cuartaDiagonal[1] -= 1
-                sumaCuartaDiagonal += carton[cuartaDiagonal[0]][cuartaDiagonal[1]]
-            }
-
-            if(sumaCuartaDiagonal == -4 && filasDiagonalesHechas[3] == 0) {
-                lineas++
-                filasDiagonalesHechas[3] = 1
-                esLinea = true
-            }
-        }
-
-
-        var sumaQuintaDiagonal = 0
-
-        val quintaDiagonal = intArrayOf(0,4)
-        for(i in 0..4) {
-            if(i != 0 && i != 2) {
-                quintaDiagonal[0] += 1
-                quintaDiagonal[1] -= 1
-                sumaQuintaDiagonal += carton[quintaDiagonal[0]][quintaDiagonal[1]]
-
-            }
-
-            if(sumaQuintaDiagonal == -4 && filasDiagonalesHechas[4] == 0) {
-                lineas++
-                filasDiagonalesHechas[4] = 1
-                esLinea = true
-            }
-        }
-
-        return esLinea
-
 
     }
 
-
-
-    fun comprobarBingo(): Boolean {
-
-        if(filasHorizontalesHechas.sum() == 5) {
-            bingo = true
+    /**
+     * Pregunta si un número está marcado en el cartón.
+     */
+    fun estaMarcado(numero: Int): Boolean {
+        var estaMarcado=false
+        estadoBingo[numero]?.let{
+            estaMarcado=(it.estado==EstadoCasilla.MARCADO)
         }
-        return bingo
-
+        return estaMarcado
     }
 
-
-
+    /**
+     * Marcar un número.
+     */
+    fun marcar(numero: Int) {
+        estadoBingo[numero]?.estado = EstadoCasilla.MARCADO
     }
 
+    /**
+     * Comprueba si hay línea sin cantar, y si es así la canta.
+     */
+    fun compruebaSiLinea(): Boolean {
+        var indiceLinea = 0
+        var hayLinea = false
+        while (indiceLinea < estadoLineas.size){
+            if (esUnaLineaSinCantar(estadoLineas[indiceLinea])){
+                hayLinea=true
+                cantaLinea(estadoLineas[indiceLinea])
+            }
+            indiceLinea++
+        }
+        return hayLinea
+    }
 
+    /**
+     * Canta la línea, emitiendo una señal con la línea y la marca como cantada
+     *
+     * ¿Tiene sentido que sea el carton quien canta la línea?
+     */
+    private fun cantaLinea(linea: Linea) {
+        linea.cantada = LineaCantada.SI
+        cantaLinea.emitir(linea)
+    }
 
+    /**
+     * Comprueba si hay bingo, y si es asi lo canta.
+     */
+    fun compruebaSiBingo(): Boolean {
+        val hayBingo= (estadoBingo.values.none {
+            it.estado == EstadoCasilla.NOMARCADO
+        })
+        if (hayBingo)
+            cantaBingo(numerosCarton())
+        return hayBingo
+    }
 
+    /**
+     * Canta el bingo, emitiendo una señal con la información del cartón
+     *
+     * ¿Tiene sentido que sea el carton quien canta el bingo?
+     */
+    private fun cantaBingo(numerosCarton: NumerosCarton) {
+        cantaBingo.emitir(numerosCarton)
+    }
+
+    /**
+     * Pregunta si es linea y sin cantar
+     */
+    private fun esUnaLineaSinCantar(linea: Linea): Boolean {
+        return ((linea.linea.none { it.estado == EstadoCasilla.NOMARCADO }) && (linea.cantada == LineaCantada.NO))
+    }
+
+    /**
+     * Convierte a formato data class los numeros del cartón para enviarlo por señal
+     */
+    private fun numerosCarton(): NumerosCarton{
+        val numerosCarton = NumerosCarton(idCarton)
+        var indiceFilas = 0
+        carton.forEach {
+            it.forEach{casilla ->
+                numerosCarton.numeros[indiceFilas].add(casilla.copy())
+            }
+            indiceFilas++
+        }
+        return numerosCarton
+    }
+
+}
 
 
 

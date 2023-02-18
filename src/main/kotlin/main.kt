@@ -1,3 +1,6 @@
+import es.edu.iesra.daw.agf.api.Juego
+
 fun main() {
-    print("Hello World")
+    Juego.configura()
+    Juego.play()
 }
