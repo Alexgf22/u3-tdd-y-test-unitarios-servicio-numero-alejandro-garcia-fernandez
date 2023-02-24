@@ -112,10 +112,12 @@ class Carton(private val idCarton: String, numeros: List<List<Int>>) {
             // Va introduciendo cada diagonal casilla por casilla, en este caso hay 2 de I-D
             // sería carton[fila][columna]
             // Diagonal 1 I-D
-            estadoLineas[indiceEstadoLinea].linea.add(carton[indice][indice+1])
+            estadoLineas[indiceEstadoLinea].linea.add(carton[indice][indice + 1])
             // Diagonal 2 I-D
-            estadoLineas[indiceEstadoLinea+1].linea.add(carton[indice+1][indice])
+            estadoLineas[indiceEstadoLinea + 1].linea.add(carton[indice + 1][indice])
         }
+
+
 
 
         var indiceColumnaD1 = 3
@@ -127,21 +129,24 @@ class Carton(private val idCarton: String, numeros: List<List<Int>>) {
             indiceColumnaD1 -= 1
 
             // Diagonal 3 D-I
-            estadoLineas[indiceEstadoLinea].linea.add(carton[indice+1][indiceColumnaD3])
+            estadoLineas[indiceEstadoLinea].linea.add(carton[indice + 1][indiceColumnaD3])
             indiceColumnaD3 -= 1
-
         }
+
+
+
 
         var indiceColumnaD2 = 4
         for(indice in 0 until dimension) {
             // Diagonal 2 D-I, controlamos la casilla vacía de la diagonal
-            if(indiceColumnaD2 != 2) {
+            if (indiceColumnaD2 != 2) {
                 estadoLineas[indiceEstadoLinea].linea.add(carton[indice][indiceColumnaD2])
             }
             indiceColumnaD2 -= 1
         }
 
-    }
+        }
+
 
     /**
      * Monta la estructura de datos para saber si hay bingo.
