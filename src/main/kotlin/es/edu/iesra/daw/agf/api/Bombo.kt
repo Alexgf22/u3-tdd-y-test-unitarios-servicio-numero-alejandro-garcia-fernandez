@@ -11,7 +11,7 @@ object Bombo {
         this.servicioNumeros = servicioNumeros
     }
 
-    fun nuevaBola(): Int? {
+    fun dameNuevaBola(): Int? {
         return servicioNumeros.dameUnNumero()
     }
 

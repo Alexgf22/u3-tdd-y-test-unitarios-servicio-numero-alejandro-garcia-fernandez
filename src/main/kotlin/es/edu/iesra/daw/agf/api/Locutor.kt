@@ -22,7 +22,7 @@ object Locutor{
      */
     fun anunciaNuevaBola():Boolean{
         var hayBolas = false
-        bombo.nuevaBola()?.let{
+        bombo.dameNuevaBola()?.let{
             nuevoNumero.emitir(it)
             hayBolas = true
         }

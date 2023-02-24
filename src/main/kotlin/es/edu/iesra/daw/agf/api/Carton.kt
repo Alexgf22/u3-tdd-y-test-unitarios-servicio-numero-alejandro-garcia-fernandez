@@ -11,7 +11,7 @@ enum class EstadoCasilla {
 /**
  * Representa las casillas del cartón
  */
-data class Casilla(val f:Int, val c:Int, val numero:Int, var estado: EstadoCasilla = EstadoCasilla.NOMARCADO)
+data class Casilla(val fila:Int, val columna:Int, val numero:Int, var estado: EstadoCasilla = EstadoCasilla.NOMARCADO)
 
 /**
  * Representa los posibles estados de una línea.
@@ -108,7 +108,7 @@ class Carton(private val idCarton: String, numeros: List<List<Int>>) {
         }
 
         //Diagonales de izquierda-derecha
-        for(indice in 0 until dimension-1) {
+        for(indice in 0 until dimension -1) {
             // Va introduciendo cada diagonal casilla por casilla, en este caso hay 2 de I-D
             // sería carton[fila][columna]
             // Diagonal 1 I-D
@@ -121,7 +121,7 @@ class Carton(private val idCarton: String, numeros: List<List<Int>>) {
         var indiceColumnaD1 = 3
         var indiceColumnaD3 = 4
         //Diagonales de derecha a izquierda (1 y 3)
-        for(indice in 0 until dimension-1) {
+        for(indice in 0 until dimension -1) {
             // Diagonal 1 D-I
             estadoLineas[indiceEstadoLinea].linea.add(carton[indice][indiceColumnaD1])
             indiceColumnaD1 -= 1

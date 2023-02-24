@@ -2,10 +2,8 @@ package es.edu.iesra.daw.agf.api
 
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
-import io.kotest.matchers.nulls.shouldBeNull
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.verify
 
 /*
 El bombo expulsará una bola marcada con un número entre 1 y 75
@@ -42,7 +40,7 @@ class BomboTest : DescribeSpec({
         it("Debe generar numeros aleatorios entre minimo y maximo") {
             // Hago (maximo - minimo) invocaciones al metodo y introduzco los elementos en la lista
             val lista = List(maximo - minimo) {
-                bombo.nuevaBola()
+                bombo.dameNuevaBola()
             }
             lista.shouldContainExactlyInAnyOrder(listaMock)
         }

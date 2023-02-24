@@ -46,7 +46,7 @@ object Registro {
     private fun informaDelLinea(linea: Linea) {
         println("línea número ${registroLineas.size} del cartón:${linea.idCarton}: ").also {
             linea.linea.forEach {
-                println("- ${it.f} ${it.c}: ${it.numero}")
+                println("- ${it.fila} ${it.columna}: ${it.numero}")
             }
         }
 
@@ -59,7 +59,7 @@ object Registro {
         println("Han cantado bingo, el cartón:${carton.idCarton}: ").also {
             carton.numeros.forEach {
                 it.forEach {casilla->
-                    print("(${casilla.f} ${casilla.c}: ${casilla.numero}")
+                    print("(${casilla.fila} ${casilla.columna}: ${casilla.numero}")
                     when(casilla.estado) {
                         EstadoCasilla.NOMARCADO -> print("O) ")
                         EstadoCasilla.MARCADO -> print("V) ")
