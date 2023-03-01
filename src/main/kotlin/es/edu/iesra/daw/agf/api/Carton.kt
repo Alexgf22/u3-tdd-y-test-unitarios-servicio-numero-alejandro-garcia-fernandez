@@ -113,9 +113,12 @@ class Carton(private val idCarton: String, numeros: List<List<Int>>) {
             // sería carton[fila][columna]
             // Diagonal 1 I-D
             estadoLineas[indiceEstadoLinea].linea.add(carton[indice][indice + 1])
+
             // Diagonal 2 I-D
             estadoLineas[indiceEstadoLinea + 1].linea.add(carton[indice + 1][indice])
+
         }
+
 
 
 
@@ -125,11 +128,11 @@ class Carton(private val idCarton: String, numeros: List<List<Int>>) {
         //Diagonales de derecha a izquierda (1 y 3)
         for(indice in 0 until dimension -1) {
             // Diagonal 1 D-I
-            estadoLineas[indiceEstadoLinea].linea.add(carton[indice][indiceColumnaD1])
+            estadoLineas[indiceEstadoLinea + 2].linea.add(carton[indice][indiceColumnaD1])
             indiceColumnaD1 -= 1
 
             // Diagonal 3 D-I
-            estadoLineas[indiceEstadoLinea].linea.add(carton[indice + 1][indiceColumnaD3])
+            estadoLineas[indiceEstadoLinea + 3].linea.add(carton[indice + 1][indiceColumnaD3])
             indiceColumnaD3 -= 1
         }
 
@@ -140,12 +143,12 @@ class Carton(private val idCarton: String, numeros: List<List<Int>>) {
         for(indice in 0 until dimension) {
             // Diagonal 2 D-I, controlamos la casilla vacía de la diagonal
             if (indiceColumnaD2 != 2) {
-                estadoLineas[indiceEstadoLinea].linea.add(carton[indice][indiceColumnaD2])
+                estadoLineas[indiceEstadoLinea + 4].linea.add(carton[indice][indiceColumnaD2])
             }
             indiceColumnaD2 -= 1
         }
 
-        }
+    }
 
 
     /**
