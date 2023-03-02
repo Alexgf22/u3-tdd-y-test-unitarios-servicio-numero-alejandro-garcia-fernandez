@@ -1,6 +1,8 @@
 import es.edu.iesra.daw.agf.api.Juego
 import java.io.File
 
+
+
 fun main() {
     /*
     En primer lugar, comprobamos si el directorio principal llamado (.bingo) existe y si no existe lo creamos.
@@ -41,4 +43,11 @@ fun main() {
 
 
 }
+
+
+
+
+
+
+
 
