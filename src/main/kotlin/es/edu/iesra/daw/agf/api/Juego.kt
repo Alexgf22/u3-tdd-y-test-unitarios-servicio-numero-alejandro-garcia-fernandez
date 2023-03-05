@@ -18,7 +18,14 @@ los identificadores de los cartones y las líneas conseguidas, así como
 el bingo del cartón ganador.
  */
 
-data class ConfigJuego(val nunCartones: Int = 5, val bombo: Bombo = Bombo, val locutor: Locutor =Locutor, val generador: GeneradorDeCartones = GeneradorDeCartones, val registro: Registro = Registro)
+data class ConfigJuego(
+    val nunCartones: Int = 5,
+    val bombo: Bombo = Bombo,
+    val locutor: Locutor = Locutor,
+    val generador: GeneradorDeCartones = GeneradorDeCartones,
+    val registro: Registro = Registro,
+    val outputFormat: String = "ts"
+)
 
 object Juego {
 
@@ -29,6 +36,7 @@ object Juego {
     private lateinit var cartones: List<Carton>
     private lateinit var bombo: Bombo
     private lateinit var registro: Registro
+    private lateinit var outputFormatter: OutputFormatter
 
     fun configura(config : ConfigJuego= ConfigJuego()) {
         numCartones = config.nunCartones
@@ -37,6 +45,10 @@ object Juego {
             configura(config.bombo)
         }
         registro = config.registro
+        outputFormatter = when (config.outputFormat) {
+            "tt" -> TableOutputFormatter()
+            else -> TextOutputFormatter()
+        }
         montaJuego()
 
     }
