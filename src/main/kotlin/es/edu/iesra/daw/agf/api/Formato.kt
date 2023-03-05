@@ -1,5 +1,5 @@
 package es.edu.iesra.daw.agf.api
 
 interface OutputFormatter {
-    fun format(registro: Registro): String
+    fun imprimir(numeros: List<Int>): String
 }

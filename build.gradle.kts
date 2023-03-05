@@ -25,7 +25,8 @@ dependencies {
     implementation("com.squareup.moshi:moshi:$moshiVersion")
     implementation("com.squareup.moshi:moshi-kotlin:$moshiVersion")
     implementation("org.slf4j:slf4j-simple:1.7.25")
-    implementation("com.github.marcelmay:kformat:1.6.0")
+    //implementation("com.github.marcelmay:kformat:1.6.0")
+    implementation("de.m3y.kformat:kformat:0.9")
 
     testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
     testImplementation("io.kotest:kotest-assertions-core:$kotestVersion")

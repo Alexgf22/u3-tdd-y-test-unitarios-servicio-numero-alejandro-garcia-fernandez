@@ -24,7 +24,7 @@ data class ConfigJuego(
     val locutor: Locutor = Locutor,
     val generador: GeneradorDeCartones = GeneradorDeCartones,
     val registro: Registro = Registro,
-    val outputFormat: String = "ts"
+    val formatoSalida: String = "ts"
 )
 
 object Juego {
@@ -33,10 +33,10 @@ object Juego {
     private var numCartones: Int = 0
     private lateinit var locutor: Locutor
     private lateinit var generador: GeneradorDeCartones
-    private lateinit var cartones: List<Carton>
+    internal lateinit var cartones: List<Carton>
     private lateinit var bombo: Bombo
     private lateinit var registro: Registro
-    private lateinit var outputFormatter: OutputFormatter
+    private lateinit var formateadorSalida: OutputFormatter
 
     fun configura(config : ConfigJuego= ConfigJuego()) {
         numCartones = config.nunCartones
@@ -45,9 +45,17 @@ object Juego {
             configura(config.bombo)
         }
         registro = config.registro
-        outputFormatter = when (config.outputFormat) {
-            "tt" -> TableOutputFormatter()
-            else -> TextOutputFormatter()
+        /*
+        Aquí creamos una instancia de FormatoTabla() si el valor de formatoSalida es "tt".
+        De lo contrario, creamos una instancia de FormatoTexto().
+        Luego, almacenamos esta instancia en la propiedad formateadorSalida.
+        Por lo tanto, cuando se llama al método imprimir() en la propiedad formateadorSalida,
+        se invocará el método imprimir() correspondiente en la clase FormatoTabla o FormatoTexto,
+        según lo configurado en la instancia de ConfigJuego.
+         */
+        formateadorSalida = when (config.formatoSalida) {
+            "tt" -> FormatoTabla()
+            else -> FormatoTexto()
         }
         montaJuego()
 
