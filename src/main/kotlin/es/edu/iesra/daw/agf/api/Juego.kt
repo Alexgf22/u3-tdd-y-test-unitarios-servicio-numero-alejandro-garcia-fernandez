@@ -37,6 +37,7 @@ object Juego {
             configura(config.bombo)
         }
         registro = config.registro
+
         montaJuego()
 
     }
